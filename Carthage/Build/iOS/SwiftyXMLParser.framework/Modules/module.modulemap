@@ -1,0 +1,11 @@
+framework module SwiftyXMLParser {
+  umbrella header "SwiftyXMLParser.h"
+
+  export *
+  module * { export * }
+}
+
+module SwiftyXMLParser.Swift {
+    header "SwiftyXMLParser-Swift.h"
+    requires objc
+}

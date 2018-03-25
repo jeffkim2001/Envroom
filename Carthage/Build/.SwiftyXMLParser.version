@@ -1,0 +1,24 @@
+{
+  "Mac" : [
+    {
+      "name" : "SwiftyXMLParser",
+      "hash" : "f85ced28dabb8c1415c1ac8b8df53d392645b3993d623e6a0c595819e400406c"
+    }
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+    {
+      "name" : "SwiftyXMLParser",
+      "hash" : "e0ab84997dd612512eb33d94e43e4a4550670377edc9b2f4a2edfb92e8f97299"
+    }
+  ],
+  "commitish" : "4.1.0",
+  "iOS" : [
+    {
+      "name" : "SwiftyXMLParser",
+      "hash" : "928d7ae49634eff064a9532915b66713e969ecd02f3f8112fb6c353060acb543"
+    }
+  ]
+}

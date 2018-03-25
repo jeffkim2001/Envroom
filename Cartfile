@@ -1,0 +1,8 @@
+github "Alamofire/Alamofire" ~> 4.7
+github "SwiftyJSON/SwiftyJSON"
+github "SVProgressHUD/SVProgressHUD"
+github "https://github.com/yahoojapan/SwiftyXMLParser"
+github "vikmeup/SCLAlertView-Swift" "master"
+github "twilio/twilio-chat-ios"
+
+

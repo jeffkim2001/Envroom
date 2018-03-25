@@ -1,0 +1,18 @@
+{
+  "Mac" : [
+
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "commitish" : "v2.2.1",
+  "iOS" : [
+    {
+      "name" : "TwilioChatClient",
+      "hash" : "61b697268686acf102c0da5e0b80af8591b2467443a0cd80d90fa92a18e3e0e2"
+    }
+  ]
+}

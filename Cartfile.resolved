@@ -1,4 +1,4 @@
-github "Alamofire/Alamofire" "4.7.0"
+github "Alamofire/Alamofire" "4.7.1"
 github "SVProgressHUD/SVProgressHUD" "2.2.5"
 github "SwiftyJSON/SwiftyJSON" "4.0.0"
 github "twilio/twilio-chat-ios" "v2.2.1"

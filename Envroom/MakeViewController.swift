@@ -72,7 +72,6 @@ class MakeViewController: UIViewController, UITableViewDelegate, UITableViewData
         } catch {
             print("Error encoding data: \(error)")
         }
-        
     }
     
     func loadCheckedData() {

@@ -14,8 +14,6 @@
 		AC3BD9D52067A621000BD1CF /* MakeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3BD9D32067A621000BD1CF /* MakeCell.swift */; };
 		AC3BD9D62067A621000BD1CF /* MakeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC3BD9D42067A621000BD1CF /* MakeCell.xib */; };
 		AC3BD9D82067AB1D000BD1CF /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3BD9D72067AB1D000BD1CF /* TabBarController.swift */; };
-		AC3BD9DA2067D863000BD1CF /* TwilioChatClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC3BD9D92067D863000BD1CF /* TwilioChatClient.framework */; };
-		AC3BD9DB2067D863000BD1CF /* TwilioChatClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AC3BD9D92067D863000BD1CF /* TwilioChatClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ACFFB5492066F3B4008574EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFFB5482066F3B4008574EB /* AppDelegate.swift */; };
 		ACFFB54B2066F3B4008574EB /* TripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFFB54A2066F3B4008574EB /* TripViewController.swift */; };
 		ACFFB54E2066F3B4008574EB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACFFB54C2066F3B4008574EB /* Main.storyboard */; };
@@ -45,7 +43,6 @@
 				ACFFB56C20671D06008574EB /* SVProgressHUD.framework in Embed Frameworks */,
 				AC3BD9D020674E8C000BD1CF /* SwiftyXMLParser.framework in Embed Frameworks */,
 				ACFFB56420670679008574EB /* SwiftyJSON.framework in Embed Frameworks */,
-				AC3BD9DB2067D863000BD1CF /* TwilioChatClient.framework in Embed Frameworks */,
 				ACFFB56020670672008574EB /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -62,7 +59,6 @@
 		AC3BD9D32067A621000BD1CF /* MakeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeCell.swift; sourceTree = "<group>"; };
 		AC3BD9D42067A621000BD1CF /* MakeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MakeCell.xib; sourceTree = "<group>"; };
 		AC3BD9D72067AB1D000BD1CF /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		AC3BD9D92067D863000BD1CF /* TwilioChatClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwilioChatClient.framework; path = Carthage/Build/iOS/TwilioChatClient.framework; sourceTree = "<group>"; };
 		ACFFB5452066F3B4008574EB /* Envroom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Envroom.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACFFB5482066F3B4008574EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ACFFB54A2066F3B4008574EB /* TripViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripViewController.swift; sourceTree = "<group>"; };
@@ -91,7 +87,6 @@
 				ACFFB56320670679008574EB /* SwiftyJSON.framework in Frameworks */,
 				ACFFB55F20670672008574EB /* Alamofire.framework in Frameworks */,
 				123C9C260E4B702BF554D17A /* Pods_Envroom.framework in Frameworks */,
-				AC3BD9DA2067D863000BD1CF /* TwilioChatClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,7 +113,6 @@
 		ACFFB53C2066F3B4008574EB = {
 			isa = PBXGroup;
 			children = (
-				AC3BD9D92067D863000BD1CF /* TwilioChatClient.framework */,
 				AC3BD9CE20674E8B000BD1CF /* SwiftyXMLParser.framework */,
 				ACFFB56A20671D06008574EB /* SVProgressHUD.framework */,
 				ACFFB56220670679008574EB /* SwiftyJSON.framework */,
@@ -192,7 +186,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Jeff Kim";
 				TargetAttributes = {
 					ACFFB5442066F3B4008574EB = {
@@ -342,6 +336,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -349,6 +344,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -399,6 +395,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -406,6 +403,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

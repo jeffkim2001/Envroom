@@ -14,7 +14,6 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         let attributes = [NSAttributedStringKey.font : UIFont(name: "Helvetica-Light", size: 20)!, NSAttributedStringKey.foregroundColor : UIColor.white]
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UINavigationBar.classForCoder() as! UIAppearanceContainer.Type]).setTitleTextAttributes(attributes, for: .normal)
-
     }
 
     override func didReceiveMemoryWarning() {

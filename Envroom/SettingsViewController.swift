@@ -112,11 +112,13 @@ class SettingsViewController: UITableViewController, UIPickerViewDelegate, UIPic
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(SettingsViewController.cancel))
+        
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
         
         let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(SettingsViewController.dismissKeyboard))
         
-        toolBar.setItems([flexibleSpace, doneButton], animated: false)
+        toolBar.setItems([cancelButton, flexibleSpace, doneButton], animated: false)
         toolBar.isUserInteractionEnabled = true
         dummy.inputAccessoryView = toolBar
         dummy.becomeFirstResponder()
@@ -126,6 +128,10 @@ class SettingsViewController: UITableViewController, UIPickerViewDelegate, UIPic
         view.endEditing(true)
         selectedYear = years[selectedRow]
         selectedYearLabel.text = "\(years[selectedRow])"
+    }
+    
+    @objc func cancel() {
+        view.endEditing(true)
     }
 
 }

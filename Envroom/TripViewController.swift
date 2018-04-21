@@ -37,9 +37,12 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var startTracking: UIButton!
     @IBOutlet weak var trackButton: UIButton!
     @IBOutlet weak var carLabel: UILabel!
+    @IBOutlet weak var topView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        topView.layer.borderColor = UIColor.green.cgColor
+        topView.layer.borderWidth = 1
         mapView.layer.borderColor = UIColor.green.cgColor
         mapView.layer.borderWidth = 1
         let attributes = [NSAttributedStringKey.font : UIFont(name: "Helvetica-Light", size: 20)!, NSAttributedStringKey.foregroundColor : UIColor.white]
@@ -84,9 +87,7 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
         mapView.showsUserLocation = true
         if startDate == nil {
             startDate = Date()
-        } else {
-            print("elapsedTime:", String(format: "%.0fs", Date().timeIntervalSince(startDate)))
-        }
+        } 
         if startLocation == nil {
             startLocation = locations.first
         } else if let location = locations.last {
@@ -95,11 +96,11 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
             }
                 traveledDistanceInMiles = (100 * traveledDistance * 0.000621371) / 100
             if mpg != nil {
-                gallonValue = (100 * (traveledDistanceInMiles/mpg!)) / 100
+                    gallonValue = (100 * (traveledDistanceInMiles/mpg!)) / 100
                     CO2Value = (100 * gallonValue * 19.64) / 100
                     gallonsSpent.text = "Fuel Spent: " + String(format: "%.2f", gallonValue) + " gallons"
                     carbonEmission.text = "Amount of CO2 Emitted: " + String(format: "%.2f", CO2Value) + " lbs"
-                if CO2Value > 24 {
+                if CO2Value > 27.78 {
                     if count == 0 {
                         timedNotifications(inSeconds: 1) { (success) in
                             if success {
@@ -146,20 +147,22 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func requestID() {
-        let parameters : [String: String] = ["year" : "\(selectedYear!)", "make" : selectedMake, "model" : modelName]
-        Alamofire.request(idURL, method: .get, parameters: parameters).responseData {
-            (response) in
-            if response.result.isSuccess {
-                if let data = response.data {
-                    let xml = XML.parse(data)
-                    if let theID = xml["menuItems", "menuItem", 0, "value"].int {
-                        self.carID = theID
-                        self.requestMPG(id: self.carID!)
+        if selectedYear != nil {
+            let parameters : [String: String] = ["year" : "\(selectedYear!)", "make" : selectedMake, "model" : modelName]
+            Alamofire.request(idURL, method: .get, parameters: parameters).responseData {
+                (response) in
+                if response.result.isSuccess {
+                    if let data = response.data {
+                        let xml = XML.parse(data)
+                        if let theID = xml["menuItems", "menuItem", 0, "value"].int {
+                            self.carID = theID
+                            self.requestMPG(id: self.carID!)
+                        }
+                        
                     }
-                    
                 }
             }
-    }
+        }
     }
     
     func requestMPG(id: Int) {

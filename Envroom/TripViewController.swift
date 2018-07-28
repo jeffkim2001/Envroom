@@ -15,7 +15,7 @@ import MapKit
 import UserNotifications
 
 
-class TripViewController: UIViewController, CLLocationManagerDelegate {
+class TripViewController: UIViewController {
     
     let idURL : String = "http://fueleconomy.gov/ws/rest/vehicle/menu/options"
     let mpgURL : String = ""
@@ -31,6 +31,9 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
     var gallonValue : Double = 0.00
     var CO2Value : Double = 0.00
     var trackingPressed:  Bool = false
+    var carMake: String = ""
+    var carModel: String = ""
+    var carYear: Int?
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var gallonsSpent: UILabel!
     @IBOutlet weak var carbonEmission: UILabel!
@@ -39,8 +42,30 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var carLabel: UILabel!
     @IBOutlet weak var topView: UIView!
     
+    @objc func updateMake(_ notification: NSNotification) {
+        if let make = notification.userInfo!["make"] as? String {
+            carMake = make
+        }
+    }
+    
+    @objc func updateModel(_ notification: NSNotification) {
+        if let model = notification.userInfo!["model"] as? String {
+            carModel = model
+        }
+    }
+    
+    @objc func updateYear(_ notification: NSNotification) {
+        if let year = notification.userInfo!["year"] as? Int {
+            carYear = year
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateMake(_:)), name: Notification.Name(rawValue: "updateMake"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateModel(_:)), name: Notification.Name(rawValue: "updateModel"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateYear(_:)), name: Notification.Name(rawValue: "updateYear"), object: nil)
         topView.layer.borderColor = UIColor.green.cgColor
         topView.layer.borderWidth = 1
         mapView.layer.borderColor = UIColor.green.cgColor
@@ -83,62 +108,12 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
         carbonEmission.adjustsFontSizeToFitWidth = true
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        mapView.showsUserLocation = true
-        if startDate == nil {
-            startDate = Date()
-        } 
-        if startLocation == nil {
-            startLocation = locations.first
-        } else if let location = locations.last {
-            if trackingPressed {
-                traveledDistance += lastLocation.distance(from: location)
-            }
-                traveledDistanceInMiles = (100 * traveledDistance * 0.000621371) / 100
-            if mpg != nil {
-                    gallonValue = (100 * (traveledDistanceInMiles/mpg!)) / 100
-                    CO2Value = (100 * gallonValue * 19.64) / 100
-                    gallonsSpent.text = "Fuel Spent: " + String(format: "%.2f", gallonValue) + " gallons"
-                    carbonEmission.text = "Amount of CO2 Emitted: " + String(format: "%.2f", CO2Value) + " lbs"
-                if CO2Value > 27.78 {
-                    if count == 0 {
-                        timedNotifications(inSeconds: 1) { (success) in
-                            if success {
-                                print("Successfully Notified")
-                            }
-                        }
-                        count = count + 1
-                    }
-                    
-                }
-            }
-        }
-        lastLocation = locations.last
-        let date = Date()
-        let calendar = Calendar.current
-        let hour = calendar.component(.hour, from: date)
-        let minutes = calendar.component(.minute, from: date)
-        if hour == 0 && minutes == 0 {
-            traveledDistance = 0
-            gallonsSpent.text = "Gallons Spent: 0.00 gallons"
-            carbonEmission.text = "Amount of CO2 Emitted: 0.00 lbs"
-        }
-    }
-
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        if (error as? CLError)?.code == .denied {
-            manager.stopUpdatingLocation()
-            manager.stopMonitoringSignificantLocationChanges()
-        }
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
-        if selectedYear != 1980 && selectedMake != "" && modelName != "" {
+        if carYear != 1980 && carMake != "" && carModel != "" {
             requestID()
         }
-        if selectedYear != nil {
-            carLabel.text = "\(selectedYear!) \(selectedMake) \(modelName)"
+        if carYear != nil {
+            carLabel.text = "\(carYear!) \(carMake) \(carModel)"
         }
     }
 
@@ -147,8 +122,8 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func requestID() {
-        if selectedYear != nil {
-            let parameters : [String: String] = ["year" : "\(selectedYear!)", "make" : selectedMake, "model" : modelName]
+        if carYear != nil {
+            let parameters : [String: String] = ["year" : "\(carYear!)", "make" : carMake, "model" : carModel]
             Alamofire.request(idURL, method: .get, parameters: parameters).responseData {
                 (response) in
                 if response.result.isSuccess {
@@ -214,5 +189,57 @@ class TripViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
+}
+
+extension TripViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        if (error as? CLError)?.code == .denied {
+            manager.stopUpdatingLocation()
+            manager.stopMonitoringSignificantLocationChanges()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        mapView.showsUserLocation = true
+        if startDate == nil {
+            startDate = Date()
+        }
+        if startLocation == nil {
+            startLocation = locations.first
+        } else if let location = locations.last {
+            if trackingPressed {
+                traveledDistance += lastLocation.distance(from: location)
+            }
+            traveledDistanceInMiles = (100 * traveledDistance * 0.000621371) / 100
+            if mpg != nil {
+                gallonValue = (100 * (traveledDistanceInMiles/mpg!)) / 100
+                CO2Value = (100 * gallonValue * 19.64) / 100
+                gallonsSpent.text = "Fuel Spent: " + String(format: "%.2f", gallonValue) + " gallons"
+                carbonEmission.text = "Amount of CO2 Emitted: " + String(format: "%.2f", CO2Value) + " lbs"
+                if CO2Value > 27.78 {
+                    if count == 0 {
+                        timedNotifications(inSeconds: 1) { (success) in
+                            if success {
+                                print("Successfully Notified")
+                            }
+                        }
+                        count = count + 1
+                    }
+                    
+                }
+            }
+        }
+        lastLocation = locations.last
+        let date = Date()
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: date)
+        let minutes = calendar.component(.minute, from: date)
+        if hour == 0 && minutes == 0 {
+            traveledDistance = 0
+            gallonsSpent.text = "Gallons Spent: 0.00 gallons"
+            carbonEmission.text = "Amount of CO2 Emitted: 0.00 lbs"
+        }
+    }
 }
 

@@ -13,21 +13,19 @@ import CoreData
 import SVProgressHUD
 import SCLAlertView
 
-var modelName : String = ""
 let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
-class ModelViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+class ModelViewController: UIViewController {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var modelTableView: UITableView!
+    var modelName : String = ""
     
     var vpicModelURL : String = ""
     var models = [CarModel]()
+    var selectedMake: String = ""
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return models.count
-    }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.layer.borderWidth = 0
@@ -43,16 +41,6 @@ class ModelViewController: UIViewController, UISearchBarDelegate, UITableViewDel
         requestCarModels()
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = modelTableView.dequeueReusableCell(withIdentifier: "modelCell", for: indexPath) as! ModelCell
-        cell.modelLabel.text = models[indexPath.row].modelName
-        cell.selectionStyle = .none
-        cell.modelLabel.numberOfLines = 1
-        cell.modelLabel.minimumScaleFactor = 0.5
-        cell.modelLabel.adjustsFontSizeToFitWidth = true
-        return cell
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -84,30 +72,6 @@ class ModelViewController: UIViewController, UISearchBarDelegate, UITableViewDel
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        DispatchQueue.main.async {
-            searchBar.resignFirstResponder()
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        modelName = models[indexPath.row].modelName!
-        let alert = SCLAlertView(appearance: SCLAlertView.SCLAppearance(
-            kTitleFont: UIFont(name: "HelveticaNeue-Light", size: 20)!,
-            kTextFont: UIFont(name: "HelveticaNeue-Light", size: 14)!,
-            kButtonFont: UIFont(name: "HelveticaNeue-Light", size: 14)!,
-            showCloseButton: false
-        ))
-        alert.addButton("OK", action: {
-            alert.dismiss(animated: true, completion: nil)
-        })
-        alert.showSuccess("Car Model Selected!", subTitle: "You have selected a car model!")
-    }
-    
     func configureModelTableView() {
         modelTableView.rowHeight = UITableViewAutomaticDimension
         modelTableView.estimatedRowHeight = 120.0
@@ -133,6 +97,10 @@ class ModelViewController: UIViewController, UISearchBarDelegate, UITableViewDel
         modelTableView.reloadData()
     }
     
+
+}
+
+extension ModelViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             loadModels()
@@ -146,5 +114,49 @@ class ModelViewController: UIViewController, UISearchBarDelegate, UITableViewDel
             loadModels(with: request)
         }
     }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        DispatchQueue.main.async {
+            searchBar.resignFirstResponder()
+        }
+    }
+}
 
+extension ModelViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return models.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = modelTableView.dequeueReusableCell(withIdentifier: "modelCell", for: indexPath) as! ModelCell
+        cell.modelLabel.text = models[indexPath.row].modelName
+        cell.selectionStyle = .none
+        cell.modelLabel.numberOfLines = 1
+        cell.modelLabel.minimumScaleFactor = 0.5
+        cell.modelLabel.adjustsFontSizeToFitWidth = true
+        return cell
+    }
+}
+
+extension ModelViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        modelName = models[indexPath.row].modelName!
+        let alert = SCLAlertView(appearance: SCLAlertView.SCLAppearance(
+            kTitleFont: UIFont(name: "HelveticaNeue-Light", size: 20)!,
+            kTextFont: UIFont(name: "HelveticaNeue-Light", size: 14)!,
+            kButtonFont: UIFont(name: "HelveticaNeue-Light", size: 14)!,
+            showCloseButton: false
+        ))
+        alert.addButton("OK", action: {
+            alert.dismiss(animated: true, completion: nil)
+        })
+        alert.showSuccess("Car Model Selected!", subTitle: "You have selected a car model!")
+        let modelDict = ["model" : modelName]
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "updateModel"), object: nil, userInfo: modelDict)
+    }
+    
 }

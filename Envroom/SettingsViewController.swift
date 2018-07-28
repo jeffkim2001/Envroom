@@ -10,8 +10,7 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
-var selectedYear: Int?
-class SettingsViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class SettingsViewController: UITableViewController {
     
     @IBOutlet weak var theYearCell: UITableViewCell!
     @IBOutlet weak var theModelCell: UITableViewCell!
@@ -25,12 +24,29 @@ class SettingsViewController: UITableViewController, UIPickerViewDelegate, UIPic
     var years :[Int] = []
     let makes : [String] = []
     let dummy = UITextField(frame: CGRect.zero)
+    var selectedYear: Int = 0
+    var selectedMake: String = ""
+    var selectedModel: String = ""
+    
+    @objc func updateMake(_ notification: NSNotification) {
+        if let make = notification.userInfo!["make"] as? String {
+            selectedMake = make
+        }
+    }
+    
+    @objc func updateModel(_ notification: NSNotification) {
+        if let model = notification.userInfo!["model"] as? String {
+            selectedModel = model
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let attributes = [NSAttributedStringKey.font : UIFont(name: "Helvetica-Light", size: 20)!, NSAttributedStringKey.foregroundColor : UIColor.white]
         self.navigationController?.navigationBar.titleTextAttributes = attributes
         self.navigationItem.backBarButtonItem?.setTitleTextAttributes(attributes, for: UIControlState.normal)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateMake(_:)), name: Notification.Name(rawValue: "updateMake"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateModel(_:)), name: Notification.Name(rawValue: "updateModel"), object: nil)
         theMakeCell.layer.borderColor = UIColor.gray.cgColor
         theMakeCell.layer.borderWidth = 0.6
         theModelCell.layer.borderColor = UIColor.gray.cgColor
@@ -44,9 +60,16 @@ class SettingsViewController: UITableViewController, UIPickerViewDelegate, UIPic
         settingsTableView.tableFooterView = UIView()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "seeModels" {
+            let destinationVC = segue.destination as! ModelViewController
+            destinationVC.selectedMake = selectedMake
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         selectedMakeLabel.text = selectedMake
-        selectedModelLabel.text = modelName
+        selectedModelLabel.text = selectedModel
     }
     
     override func didReceiveMemoryWarning() {
@@ -92,22 +115,6 @@ class SettingsViewController: UITableViewController, UIPickerViewDelegate, UIPic
         yearPicker.selectRow(0, inComponent: 0, animated: true)
     }
     
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return years.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "\(years[row])"
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-         selectedRow = row
-    }
-    
     func createToolBar() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -127,6 +134,8 @@ class SettingsViewController: UITableViewController, UIPickerViewDelegate, UIPic
     @objc func dismissKeyboard() {
         view.endEditing(true)
         selectedYear = years[selectedRow]
+        let yearDict = ["year" : selectedYear]
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "updateYear"), object: nil, userInfo: yearDict)
         selectedYearLabel.text = "\(years[selectedRow])"
     }
     
@@ -134,4 +143,26 @@ class SettingsViewController: UITableViewController, UIPickerViewDelegate, UIPic
         view.endEditing(true)
     }
 
+}
+
+extension SettingsViewController: UIPickerViewDelegate {
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selectedRow = row
+    }
+    
+}
+
+extension SettingsViewController: UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return years.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return "\(years[row])"
+    }
 }

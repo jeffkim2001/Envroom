@@ -68,6 +68,7 @@ class SettingsViewController: UITableViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         selectedMakeLabel.text = selectedMake
         selectedModelLabel.text = selectedModel
     }

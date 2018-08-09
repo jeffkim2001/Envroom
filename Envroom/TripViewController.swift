@@ -109,6 +109,7 @@ class TripViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         if carYear != 1980 && carMake != "" && carModel != "" {
             requestID()
         }
